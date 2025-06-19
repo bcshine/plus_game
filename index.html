@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧮 더하기 계산하기!</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- 게임 컨테이너 -->
+    <div id="gameContainer">
+        
+        <!-- 시작 화면 -->
+        <div id="startScreen" class="screen active">
+            <div class="timer-animation">⏰</div>
+            <h1 class="game-title">🧮 더하기 계산하기!</h1>
+            <div class="instructions">
+                <p>👉 7초 안에 정답을 입력하세요!</p>
+                <p>3문제 정답시 음료수 쿠폰 지급!</p>
+                <p>시작 버튼을 눌러주세요!</p>
+            </div>
+            <button id="startBtn" class="main-btn">시작하기 ▶️</button>
+        </div>
+
+        <!-- 게임 화면 -->
+        <div id="gameScreen" class="screen">
+            <div class="score-display">연속 정답: <span id="scoreCount">0</span>/3</div>
+            <div class="timer-container">
+                <div id="timerBar" class="timer-bar"></div>
+                <div id="timerText" class="timer-text">7</div>
+            </div>
+            <div class="problem-container">
+                <div id="problemText" class="problem-text">23 + 17 = ?</div>
+                <div id="answerDisplay" class="answer-display">정답 입력</div>
+                
+                <!-- 숫자 키패드 -->
+                <div class="number-pad">
+                    <div class="number-row">
+                        <button class="number-btn" data-number="1">1</button>
+                        <button class="number-btn" data-number="2">2</button>
+                        <button class="number-btn" data-number="3">3</button>
+                    </div>
+                    <div class="number-row">
+                        <button class="number-btn" data-number="4">4</button>
+                        <button class="number-btn" data-number="5">5</button>
+                        <button class="number-btn" data-number="6">6</button>
+                    </div>
+                    <div class="number-row">
+                        <button class="number-btn" data-number="7">7</button>
+                        <button class="number-btn" data-number="8">8</button>
+                        <button class="number-btn" data-number="9">9</button>
+                    </div>
+                    <div class="number-row">
+                        <button class="number-btn delete-btn" id="deleteBtn">⌫</button>
+                        <button class="number-btn" data-number="0">0</button>
+                        <button class="number-btn submit-btn" id="submitBtn">확인</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 성공 화면 -->
+        <div id="successScreen" class="screen">
+            <div class="success-message">🎯 정답입니다!</div>
+            <div class="next-message">다음 문제로 이동합니다...</div>
+        </div>
+
+        <!-- 실패 화면 -->
+        <div id="failScreen" class="screen">
+            <div class="fail-message">😢 오답이거나 시간이 초과되었습니다.</div>
+            <div class="answer-info">
+                <div id="correctAnswer">정답: 40</div>
+                <div id="userAnswer">입력한 값: 35</div>
+            </div>
+            <div class="fail-buttons">
+                <button id="retryBtn" class="main-btn">다시 하기 🔁</button>
+                <button id="homeBtn" class="secondary-btn">홈으로 🏠</button>
+            </div>
+            <div class="fail-animation">
+                <img src="ggg.png" class="flying-image left" alt="실패">
+                <img src="ggg.png" class="flying-image right" alt="실패">
+            </div>
+        </div>
+
+        <!-- 쿠폰 화면 -->
+        <div id="couponScreen" class="screen">
+            <div class="celebration">🎉</div>
+            <div class="congrats-message">축하합니다! 3문제를 연속 정답하셨어요!</div>
+            <div class="coupon-container">
+                <canvas id="couponCanvas" width="300" height="200"></canvas>
+                <div class="coupon-display">🥤 음료수 1잔 무료 쿠폰</div>
+            </div>
+            <div class="coupon-buttons">
+                <button id="saveCouponBtn" class="main-btn">쿠폰 저장하기 💾</button>
+                <button id="homeFromCouponBtn" class="secondary-btn">홈으로 🏠</button>
+            </div>
+            <div class="confetti-animation"></div>
+        </div>
+
+    </div>
+
+    <!-- 오디오 요소들 -->
+    <audio id="successSound" preload="auto">
+        <source src="suc_01.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="failSound" preload="auto">
+        <source src="fail_01.mp3" type="audio/mpeg">
+    </audio>
+
+    <script src="script.js"></script>
+</body>
+</html> 

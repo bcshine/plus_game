@@ -1,0 +1,485 @@
+/* 기본 설정 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+#gameContainer {
+    width: 100vw;
+    height: 100vh;
+    max-width: 400px;
+    max-height: 700px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+/* 화면 공통 스타일 */
+.screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 30px;
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0.9);
+    transition: all 0.3s ease-in-out;
+}
+
+.screen.active {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+    z-index: 10;
+}
+
+/* 시작 화면 */
+.timer-animation {
+    font-size: 4rem;
+    animation: clockTick 2s infinite;
+    margin-bottom: 20px;
+}
+
+@keyframes clockTick {
+    0%, 50% { transform: rotate(0deg); }
+    25% { transform: rotate(10deg); }
+    75% { transform: rotate(-10deg); }
+}
+
+.game-title {
+    font-size: 2rem;
+    font-weight: 900;
+    color: #333;
+    text-align: center;
+    margin-bottom: 30px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
+.instructions {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.instructions p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 10px;
+    color: #555;
+}
+
+/* 버튼 스타일 */
+.main-btn {
+    background: linear-gradient(45deg, #FF6B6B, #FF8E53);
+    color: white;
+    border: none;
+    padding: 15px 40px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+.main-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+
+.secondary-btn {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 25px;
+    cursor: pointer;
+    margin-left: 15px;
+    transition: all 0.3s ease;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+/* 게임 화면 */
+.score-display {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    background: rgba(255,255,255,0.9);
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-weight: 700;
+    color: #333;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.timer-container {
+    width: 100%;
+    margin-bottom: 40px;
+    position: relative;
+}
+
+.timer-bar {
+    width: 100%;
+    height: 20px;
+    background: #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+}
+
+.timer-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: linear-gradient(90deg, #4CAF50, #FFC107, #FF5722);
+    transition: width 0.1s linear;
+    width: 100%;
+}
+
+.timer-bar.running::after {
+    animation: timerDecrease 7s linear forwards;
+}
+
+@keyframes timerDecrease {
+    from { width: 100%; }
+    to { width: 0%; }
+}
+
+.timer-text {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    font-size: 2rem;
+    font-weight: 900;
+    color: #FF5722;
+}
+
+.problem-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+}
+
+.problem-text {
+    font-size: 3rem;
+    font-weight: 900;
+    color: #333;
+    margin-bottom: 30px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
+.answer-display {
+    width: 100%;
+    max-width: 280px;
+    padding: 20px;
+    font-size: 2rem;
+    font-weight: 700;
+    border: 3px solid #ddd;
+    border-radius: 15px;
+    text-align: center;
+    margin-bottom: 25px;
+    background: white;
+    color: #333;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Noto Sans KR', sans-serif;
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.answer-display.placeholder {
+    color: #999;
+    font-size: 1.3rem;
+    font-weight: 400;
+}
+
+/* 숫자 키패드 */
+.number-pad {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+    max-width: 280px;
+    margin: 0 auto;
+}
+
+.number-row {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.number-btn {
+    width: 70px;
+    height: 70px;
+    font-size: 1.8rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: 'Noto Sans KR', sans-serif;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    background: linear-gradient(145deg, #f0f0f0, #e0e0e0);
+    color: #333;
+}
+
+.number-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+}
+
+.number-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.number-btn.submit-btn {
+    background: linear-gradient(145deg, #28a745, #218838);
+    color: white;
+    font-size: 1.2rem;
+}
+
+.number-btn.submit-btn:hover {
+    background: linear-gradient(145deg, #218838, #1e7e34);
+}
+
+.number-btn.delete-btn {
+    background: linear-gradient(145deg, #dc3545, #c82333);
+    color: white;
+    font-size: 1.5rem;
+}
+
+.number-btn.delete-btn:hover {
+    background: linear-gradient(145deg, #c82333, #bd2130);
+}
+
+/* 성공 화면 */
+.success-message {
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: #28a745;
+    text-align: center;
+    margin-bottom: 20px;
+    animation: successPulse 1.5s ease-in-out;
+}
+
+@keyframes successPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.next-message {
+    font-size: 1.2rem;
+    color: #666;
+    text-align: center;
+}
+
+/* 실패 화면 */
+.fail-message {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #dc3545;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.answer-info {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.answer-info div {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.fail-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.fail-animation {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.flying-image {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    opacity: 0;
+}
+
+.flying-image.left {
+    top: 50%;
+    left: -60px;
+    animation: flyLeft 2s ease-out;
+}
+
+.flying-image.right {
+    top: 50%;
+    right: -60px;
+    animation: flyRight 2s ease-out;
+}
+
+@keyframes flyLeft {
+    0% { left: -60px; opacity: 1; transform: rotate(0deg); }
+    50% { left: 50%; opacity: 1; }
+    100% { left: 120%; opacity: 0; transform: rotate(360deg); }
+}
+
+@keyframes flyRight {
+    0% { right: -60px; opacity: 1; transform: rotate(0deg); }
+    50% { right: 50%; opacity: 1; }
+    100% { right: 120%; opacity: 0; transform: rotate(-360deg); }
+}
+
+/* 쿠폰 화면 */
+.celebration {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    animation: celebrate 2s infinite;
+}
+
+@keyframes celebrate {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    25% { transform: scale(1.2) rotate(10deg); }
+    75% { transform: scale(1.2) rotate(-10deg); }
+}
+
+.congrats-message {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #333;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.coupon-container {
+    position: relative;
+    margin-bottom: 30px;
+}
+
+#couponCanvas {
+    border: 3px dashed #28a745;
+    border-radius: 15px;
+    background: #f8f9fa;
+}
+
+.coupon-display {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #28a745;
+    text-align: center;
+    margin-top: 15px;
+}
+
+.coupon-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.confetti-animation {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="%23FF6B6B"/><circle cx="80" cy="30" r="2" fill="%2328a745"/><circle cx="60" cy="70" r="2" fill="%23FFC107"/><circle cx="30" cy="80" r="2" fill="%236f42c1"/></svg>') repeat;
+    animation: confettiFall 3s linear infinite;
+}
+
+@keyframes confettiFall {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100vh); }
+}
+
+/* 모바일 최적화 */
+@media (max-width: 480px) {
+    #gameContainer {
+        width: 100vw;
+        height: 100vh;
+        border-radius: 0;
+        max-width: none;
+        max-height: none;
+    }
+    
+    .game-title {
+        font-size: 1.8rem;
+    }
+    
+    .problem-text {
+        font-size: 2.5rem;
+    }
+    
+    .instructions p {
+        font-size: 1rem;
+    }
+    
+    .number-btn {
+        width: 80px;
+        height: 80px;
+        font-size: 2rem;
+    }
+    
+    .number-pad {
+        gap: 20px;
+    }
+    
+    .number-row {
+        gap: 20px;
+    }
+}
+
+/* 버튼 활성화 애니메이션 */
+@keyframes buttonPress {
+    0% { transform: scale(1); }
+    50% { transform: scale(0.95); }
+    100% { transform: scale(1); }
+}
+
+.main-btn:active, .secondary-btn:active, .submit-btn:active {
+    animation: buttonPress 0.1s ease;
+} 
